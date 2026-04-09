@@ -39,7 +39,7 @@ export function App() {
               type='text'
               labelText='task'
               placeholder='Digite algo'
-              disabled
+              // disabled
     
                />
           </div>
