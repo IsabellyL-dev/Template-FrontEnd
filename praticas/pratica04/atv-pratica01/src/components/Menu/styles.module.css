@@ -26,3 +26,8 @@
   width: 2.4rem;
   height: 2.4rem;
 }
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+}

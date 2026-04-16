@@ -48,3 +48,18 @@ body {
   gap: 2.4rem;
 }
 
+:root {
+  --bg: #111;
+  --text: #fff;
+}
+
+[data-theme='light'] {
+  --bg: #fff;
+  --text: #111;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  transition: 0.3s;
+}
