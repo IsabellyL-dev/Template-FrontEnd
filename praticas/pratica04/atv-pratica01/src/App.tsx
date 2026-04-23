@@ -20,11 +20,6 @@ export function App() {
   return (
     <>
      
-  <>
-    <StrictMode>
-      <App />
-    </StrictMode>
-  </>
 
       <Container>
         <Logo />
