@@ -8,6 +8,7 @@ html {
   font-size: 62.5%;
 }
 body {
+  
   /* Tamanho base de 16px, graças ao truque do rem! */
   font-size: 1.6rem;
 
@@ -49,17 +50,11 @@ body {
 }
 
 :root {
-  --bg: #111;
-  --text: #fff;
+  --gray-900: #0a0f1a;
+  --text-default: #e6e9f0;
 }
 
 [data-theme='light'] {
-  --bg: #fff;
-  --text: #111;
-}
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  transition: 0.3s;
+  --gray-900: #ffffff;
+  --text-default: #111111;
 }
