@@ -31,7 +31,7 @@ export function MainForm() {
       alert('Digite o nome da tarefa');
       return;
     }
-
+console.log('STATE AO INICIAR:', state);
     const newTask: TaskModel = {
       id: Date.now().toString(),
       name: taskName,
@@ -49,16 +49,8 @@ export function MainForm() {
     });
 
 
-   const timerWorkerManager = TimerWorkerManager.getInstance();
-
-
-
-timerWorkerManager.onmessage(event => {
-  console.log('PRINCIPAL recebeu:', event.data);
-});
-
-
-    taskNameInput.current.value = '';
+   
+    // taskNameInput.current.value = '';
   }
 
   function handleInterruptTask() {

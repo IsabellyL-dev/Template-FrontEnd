@@ -1,33 +1,41 @@
 import type { TaskStateModel } from '../models/TaskStateModel';
-
-
-let instance: TimerWorkerManager | null = null;
+import TimerWorker from './timerWorker?worker';
 
 export class TimerWorkerManager {
+  private static instance: TimerWorkerManager;
   private worker: Worker;
 
-  private constructor() {
-    this.worker = new Worker(new URL('./timerWorker.js', import.meta.url));
+  private constructor() {{
+  this.worker = new TimerWorker();
+}
   }
 
-  static getInstance() {
-    if (!instance) {
-      instance = new TimerWorkerManager();
+  // 🔥 garante singleton (um único worker na aplicação)
+  static getInstance(): TimerWorkerManager {
+    if (!TimerWorkerManager.instance) {
+      TimerWorkerManager.instance = new TimerWorkerManager();
     }
-
-    return instance;
+    return TimerWorkerManager.instance;
   }
 
+  // 📤 envia estado pro worker
   postMessage(message: TaskStateModel) {
     this.worker.postMessage(message);
   }
 
-  onmessage(cb: (e: MessageEvent) => void) {
-    this.worker.onmessage = cb;
+  // 📥 recebe mensagem do worker
+  set onmessage(fn: (e: MessageEvent) => void) {
+    this.worker.onmessage = fn;
   }
 
+  // 🧨 finaliza e recria worker (IMPORTANTE)
   terminate() {
     this.worker.terminate();
-    instance = null;
+
+    // recria automaticamente pra poder usar depois
+    this.worker = new  Worker(
+      new URL('./timerWorker.ts', import.meta.url),
+      { type: 'module' }
+    );
   }
 }
