@@ -5,10 +5,10 @@ export class TimerWorkerManager {
   private static instance: TimerWorkerManager;
   private worker: Worker;
 
-  private constructor() {{
+  private constructor() {
   this.worker = new TimerWorker();
 }
-  }
+  
 
   // 🔥 garante singleton (um único worker na aplicação)
   static getInstance(): TimerWorkerManager {
@@ -28,11 +28,11 @@ export class TimerWorkerManager {
     this.worker.onmessage = fn;
   }
 
-  // 🧨 finaliza e recria worker (IMPORTANTE)
+  
   terminate() {
     this.worker.terminate();
 
-    // recria automaticamente pra poder usar depois
+   
     this.worker = new  Worker(
       new URL('./timerWorker.ts', import.meta.url),
       { type: 'module' }

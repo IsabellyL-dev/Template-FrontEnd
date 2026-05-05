@@ -49,12 +49,3 @@ body {
   gap: 2.4rem;
 }
 
-:root {
-  --gray-900: #0a0f1a;
-  --text-default: #e6e9f0;
-}
-
-[data-theme='light'] {
-  --gray-900: #ffffff;
-  --text-default: #111111;
-}

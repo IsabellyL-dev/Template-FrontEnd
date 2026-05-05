@@ -9,7 +9,7 @@ export function taskReducer(
   action: TaskActionModel,
 ): TaskStateModel {
   
-  console.log('ACTION DISPARADA:', action);
+  
 
   switch (action.type) {
     case TaskActionTypes.START_TASK: {

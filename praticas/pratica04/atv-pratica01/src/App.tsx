@@ -1,33 +1,25 @@
-// App.tsx
-
-import { useState } from 'react';
-import type { TaskStateModel } from './models/TaskStateModel';
-import { TaskContextProvider } from './contexts/TaskContent/TaskContextProvider';
 import { Home } from './pages/Home';
-
 import './styles/theme.css';
 import './styles/global.css';
-
-const initialState: TaskStateModel = {
-  tasks: [],
-  secondsRemaining: 0,
-  formattedSecondsRemaining: '00:00',
-  activeTask: null,
-  currentCycle: 0,
-  config: {
-    workTime: 25,
-    shortBreakTime: 5,
-    longBreakTime: 15,
-  },
-};
+import { TaskContextProvider } from './contexts/TaskContent/TaskContextProvider';
+import { MessagesContainer } from './components/MessagesContainer';
+import { BrowserRouter, Route, Routes } from 'react-router';
+import { NotFound } from './pages/NotFound';
+import { AboutPomodoro } from './pages/AboutPomodoro';
 
 export function App() {
-   const [state, setState] = useState(initialState);
-
-  
-    return (
+  return (
     <TaskContextProvider>
-      <Home />
+      <MessagesContainer>
+        <BrowserRouter>
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/about-pomodoro/' element={<AboutPomodoro />} />
+
+            <Route path='*' element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </MessagesContainer>
     </TaskContextProvider>
   );
 }
