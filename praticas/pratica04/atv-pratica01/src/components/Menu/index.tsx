@@ -59,14 +59,14 @@ export function Menu() {
   <HistoryIcon />
 </Link>
 
-      <a
-        className={styles.menuLink}
-        href='#'
-        aria-label='Configurações'
-        title='Configurações'
-      >
-        <SettingsIcon />
-      </a>
+      <Link
+  className={styles.menuLink}
+  to='/settings/'
+  aria-label='Configurações'
+  title='Configurações'
+>
+  <SettingsIcon />
+</Link>
 
       <a
         className={styles.menuLink}
