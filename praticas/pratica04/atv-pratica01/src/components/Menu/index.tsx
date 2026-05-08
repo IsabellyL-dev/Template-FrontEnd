@@ -50,14 +50,14 @@ export function Menu() {
         <HouseIcon />
       </Link>
 
-      <a
-        className={styles.menuLink}
-        href='#'
-        aria-label='Ver Histórico'
-        title='Ver Histórico'
-      >
-        <HistoryIcon />
-      </a>
+      <Link
+  className={styles.menuLink}
+  to='/history/'
+  aria-label='Ver Histórico'
+  title='Ver Histórico'
+>
+  <HistoryIcon />
+</Link>
 
       <a
         className={styles.menuLink}

@@ -1,6 +1,7 @@
 import { Container } from '../../components/Container';
 import { GenericHtml } from '../../components/GenericHtml';
 import { Heading } from '../../components/Heading';
+import { RouterLink } from '../../components/RouterLink';
 import { MainTemplate } from '../../templates/MainTemplate';
 
 export function AboutPomodoro() {
@@ -17,7 +18,7 @@ export function AboutPomodoro() {
           </p>
 
           <img
-            src='[https://placehold.co/1920x1080](https://placehold.co/1920x1080)'
+            src='https://placehold.co/1920x1080'
             alt='Exemplo'
           />
 
@@ -46,7 +47,24 @@ export function AboutPomodoro() {
             personalizações pra deixar o processo ainda mais eficiente.
           </p>
 
-          {/* Pode adicionar o resto do texto explicativo aqui! */}
+          <p>
+            Você pode configurar o tempo de foco, descanso curto e descanso
+            longo do jeito que quiser! Basta acessar a{' '}
+            <RouterLink href='/settings/'>página de configurações</RouterLink> e
+            ajustar os minutos como preferir.
+          </p>
+
+          <p>
+            Todas as suas tarefas e ciclos concluídos ficam salvos no{' '}
+            <RouterLink href='/history/'>histórico</RouterLink>, com status de
+            completas ou interrompidas.
+          </p>
+
+          <p>
+            <strong>Pronto pra focar?</strong> Bora lá{' '}
+            <RouterLink href='/'>voltar para a página inicial</RouterLink> e
+            iniciar seus Pomodoros! 🍅🚀
+          </p>
         </GenericHtml>
       </Container>
     </MainTemplate>

@@ -5,18 +5,35 @@ import { TaskContext } from './TaskContext';
 import { TimerWorkerManager } from '../../workers/TimerWorkerManager';
 import { TaskActionTypes } from './TaskActions';
 import { loadBeep } from '../../utils/loadBeep';
+import type { TaskStateModel } from '../../models/TaskStateModel';
 
 type TaskContextProviderProps = {
   children: React.ReactNode;
 };
 
 export function TaskContextProvider({ children }: TaskContextProviderProps) {
-  const [state, dispatch] = useReducer(taskReducer, initialTaskState);
+  const [state, dispatch] = useReducer(taskReducer, initialTaskState, () => {
+    const storageState = localStorage.getItem('state');
+
+    if (storageState === null) return initialTaskState;
+
+    try {
+      const parsed = JSON.parse(storageState) as TaskStateModel;
+      return {
+        ...parsed,
+        activeTask: null,
+        secondsRemaining: 0,
+        formattedSecondsRemaining: '00:00',
+      };
+    } catch {
+      return initialTaskState;
+    }
+  });
+
   const workerManager = useRef(TimerWorkerManager.getInstance());
   const playBeepRef = useRef<ReturnType<typeof loadBeep> | null>(null);
   const isFirstRender = useRef(true);
 
-  // Registra o onmessage do worker
   useEffect(() => {
     const worker = workerManager.current;
 
@@ -69,7 +86,16 @@ export function TaskContextProvider({ children }: TaskContextProviderProps) {
     }
   }, [state.activeTask]);
 
-  // Carrega o beep quando a tarefa inicia
+  // Persiste o estado no localStorage
+  useEffect(() => {
+    localStorage.setItem('state', JSON.stringify(state));
+  }, [state]);
+
+  // Atualiza o título da aba
+  useEffect(() => {
+    document.title = `${state.formattedSecondsRemaining} - Chronos Pomodoro`;
+  }, [state.formattedSecondsRemaining]);
+
   useEffect(() => {
     if (!state.activeTask) {
       playBeepRef.current = null;
@@ -79,7 +105,6 @@ export function TaskContextProvider({ children }: TaskContextProviderProps) {
     if (playBeepRef.current === null) {
       const play = loadBeep();
       playBeepRef.current = play;
-      // Destrava autoplay no Safari
       play();
     }
   }, [state.activeTask]);
