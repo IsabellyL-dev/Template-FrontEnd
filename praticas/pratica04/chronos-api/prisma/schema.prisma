@@ -1,0 +1,34 @@
+// Prisma Schema — Chronos API
+// Documentação: https://www.prisma.io/docs/concepts/components/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Configurações do Pomodoro (sempre 1 registro, id = 1)
+model Settings {
+  id             Int      @id @default(1)
+  workTime       Int      // tempo de trabalho em minutos
+  shortBreakTime Int      // tempo de pausa curta em minutos
+  longBreakTime  Int      // tempo de pausa longa em minutos
+  updatedAt      DateTime @updatedAt
+}
+
+// Registro de cada ciclo/task do Pomodoro
+model Task {
+  id             String   @id
+  name           String
+  duration       Int      // duração configurada em minutos
+  type           String   // "workTime" | "shortBreakTime" | "longBreakTime"
+  startDate      BigInt   // timestamp Unix em ms
+  completeDate   BigInt?  // preenchido ao concluir
+  interruptDate  BigInt?  // preenchido ao interromper
+  createdAt      DateTime @default(now())
+
+  @@index([startDate])
+}
