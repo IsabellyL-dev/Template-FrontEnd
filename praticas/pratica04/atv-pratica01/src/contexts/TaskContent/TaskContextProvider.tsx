@@ -7,6 +7,8 @@ import { TaskActionTypes } from './TaskActions';
 import { loadBeep } from '../../utils/loadBeep';
 import type { TaskStateModel } from '../../models/TaskStateModel';
 
+const API_URL = 'http://localhost:3333';
+
 type TaskContextProviderProps = {
   children: React.ReactNode;
 };
@@ -14,9 +16,7 @@ type TaskContextProviderProps = {
 export function TaskContextProvider({ children }: TaskContextProviderProps) {
   const [state, dispatch] = useReducer(taskReducer, initialTaskState, () => {
     const storageState = localStorage.getItem('state');
-
     if (storageState === null) return initialTaskState;
-
     try {
       const parsed = JSON.parse(storageState) as TaskStateModel;
       return {
@@ -34,12 +34,27 @@ export function TaskContextProvider({ children }: TaskContextProviderProps) {
   const playBeepRef = useRef<ReturnType<typeof loadBeep> | null>(null);
   const isFirstRender = useRef(true);
 
+  // Carrega settings da API no startup
+  useEffect(() => {
+    fetch(`${API_URL}/settings`)
+      .then(res => res.json())
+      .then(data => {
+        dispatch({
+          type: TaskActionTypes.CHANGE_SETTINGS,
+          payload: {
+            workTime: data.workTime,
+            shortBreakTime: data.shortBreakTime,
+            longBreakTime: data.longBreakTime,
+          },
+        });
+      })
+      .catch(() => console.warn('API offline, usando configurações locais'));
+  }, []);
+
   useEffect(() => {
     const worker = workerManager.current;
-
     if (isFirstRender.current) {
       isFirstRender.current = false;
-
       worker.onmessage = (e) => {
         const countDownSeconds = e.data;
         if (countDownSeconds <= 0) {
@@ -56,10 +71,8 @@ export function TaskContextProvider({ children }: TaskContextProviderProps) {
           });
         }
       };
-
       return;
     }
-
     if (state.activeTask && state.secondsRemaining > 0) {
       worker.onmessage = (e) => {
         const countDownSeconds = e.data;
@@ -77,21 +90,17 @@ export function TaskContextProvider({ children }: TaskContextProviderProps) {
           });
         }
       };
-
       worker.postMessage(state);
     }
-
     if (!state.activeTask) {
       worker.terminate();
     }
   }, [state.activeTask]);
 
-  // Persiste o estado no localStorage
   useEffect(() => {
     localStorage.setItem('state', JSON.stringify(state));
   }, [state]);
 
-  // Atualiza o título da aba
   useEffect(() => {
     document.title = `${state.formattedSecondsRemaining} - Chronos Pomodoro`;
   }, [state.formattedSecondsRemaining]);
@@ -101,7 +110,6 @@ export function TaskContextProvider({ children }: TaskContextProviderProps) {
       playBeepRef.current = null;
       return;
     }
-
     if (playBeepRef.current === null) {
       const play = loadBeep();
       playBeepRef.current = play;

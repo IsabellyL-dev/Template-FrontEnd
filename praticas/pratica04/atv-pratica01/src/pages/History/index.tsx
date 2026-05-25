@@ -12,9 +12,12 @@ import { TaskActionTypes } from '../../contexts/TaskContent/TaskActions';
 import { showMessage } from '../../adapters/showMessage';
 import styles from './styles.module.css';
 
+const API_URL = 'http://localhost:3333';
+
 export function History() {
   const { state, dispatch } = useTaskContext();
   const [confirmClearHistory, setConfirmClearHistory] = useState(false);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(true);
   const hasTasks = state.tasks.length > 0;
 
   const [sortTasksOptions, setSortTaskOptions] = useState<SortTasksOptions>(
@@ -27,6 +30,27 @@ export function History() {
 
   useEffect(() => {
     document.title = 'Histórico - Chronos Pomodoro';
+  }, []);
+
+  // Busca tasks da API
+  useEffect(() => {
+    setIsLoadingHistory(true);
+    fetch(`${API_URL}/tasks`)
+      .then(res => res.json())
+      .then(data => {
+        const tasks = data.map((t: any) => ({
+          ...t,
+          startDate: Number(t.startDate),
+          completeDate: t.completeDate ? Number(t.completeDate) : null,
+          interruptDate: t.interruptDate ? Number(t.interruptDate) : null,
+        }));
+        dispatch({ type: TaskActionTypes.RESET_STATE });
+        tasks.forEach((task: any) => {
+          dispatch({ type: TaskActionTypes.START_TASK, payload: task });
+        });
+      })
+      .catch(() => console.warn('API offline'))
+      .finally(() => setIsLoadingHistory(false));
   }, []);
 
   useEffect(() => {
@@ -43,7 +67,12 @@ export function History() {
   useEffect(() => {
     if (!confirmClearHistory) return;
     setConfirmClearHistory(false);
-    dispatch({ type: TaskActionTypes.RESET_STATE });
+
+    fetch(`${API_URL}/tasks`, { method: 'DELETE' })
+      .catch(() => console.warn('API offline'))
+      .finally(() => {
+        dispatch({ type: TaskActionTypes.RESET_STATE });
+      });
   }, [confirmClearHistory, dispatch]);
 
   useEffect(() => {
@@ -92,7 +121,11 @@ export function History() {
       </Container>
 
       <Container>
-        {hasTasks && (
+        {isLoadingHistory && (
+          <p style={{ textAlign: 'center' }}>Carregando histórico...</p>
+        )}
+
+        {!isLoadingHistory && hasTasks && (
           <div className={styles.responsiveTable}>
             <table>
               <thead>
@@ -125,7 +158,8 @@ export function History() {
             </table>
           </div>
         )}
-        {!hasTasks && (
+
+        {!isLoadingHistory && !hasTasks && (
           <p style={{ textAlign: 'center', fontWeight: 'bold' }}>
             Ainda não existem tarefas criadas.
           </p>
