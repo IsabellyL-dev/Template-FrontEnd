@@ -11,11 +11,13 @@ import { TaskActionTypes } from '../../contexts/TaskContent/TaskActions';
 import { Tips } from '../Tips';
 import { showMessage } from '../../adapters/showMessage';
 
+const API_URL = 'http://localhost:3333';
+
 export function MainForm() {
   const { state, dispatch } = useTaskContext();
   const taskNameInput = useRef<HTMLInputElement>(null);
 
-  function handleCreateNewTask(event: React.FormEvent<HTMLFormElement>) {
+  async function handleCreateNewTask(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     showMessage.dismiss();
 
@@ -41,13 +43,42 @@ export function MainForm() {
       type: nextCycleType,
     };
 
+    try {
+      await fetch(`${API_URL}/tasks`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: newTask.id,
+          name: newTask.name,
+          duration: newTask.duration,
+          type: newTask.type,
+          startDate: newTask.startDate,
+        }),
+      });
+    } catch {
+      console.warn('API offline, tarefa salva apenas localmente');
+    }
+
     dispatch({ type: TaskActionTypes.START_TASK, payload: newTask });
     showMessage.success('Tarefa iniciada');
   }
 
-  function handleInterruptTask() {
+  async function handleInterruptTask() {
     showMessage.dismiss();
     showMessage.error('Tarefa interrompida!');
+
+    if (state.activeTask) {
+      try {
+        await fetch(`${API_URL}/tasks/${state.activeTask.id}/interrupt`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ interruptDate: Date.now() }),
+        });
+      } catch {
+        console.warn('API offline');
+      }
+    }
+
     dispatch({ type: TaskActionTypes.INTERRUPT_TASK });
   }
 
