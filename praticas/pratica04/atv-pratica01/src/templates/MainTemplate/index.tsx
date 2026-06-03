@@ -2,14 +2,17 @@ import { Container } from '../../components/Container';
 import { Footer } from '../../components/Footer';
 import { Logo } from '../../components/Logo';
 import { Menu } from '../../components/Menu';
+import { UserGreeting } from '../../components/UserGreeting';
 
 type MainTemplateProps = {
-  children: React.ReactNode; // Tipagem para aceitar elementos React dentro da tag
+  children: React.ReactNode;
 };
 
 export function MainTemplate({ children }: MainTemplateProps) {
   return (
     <>
+      <UserGreeting />
+
       <Container>
         <Logo />
       </Container>
@@ -18,7 +21,6 @@ export function MainTemplate({ children }: MainTemplateProps) {
         <Menu />
       </Container>
 
-      {/* Aqui é onde o conteúdo específico de cada página será injetado */}
       {children}
 
       <Container>
