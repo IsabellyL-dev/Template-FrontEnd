@@ -8,6 +8,7 @@ html {
   font-size: 62.5%;
 }
 body {
+  
   /* Tamanho base de 16px, graças ao truque do rem! */
   font-size: 1.6rem;
 
@@ -47,3 +48,4 @@ body {
   flex-direction: column;
   gap: 2.4rem;
 }
+

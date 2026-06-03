@@ -1,0 +1,10 @@
+.formRow {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  display: block;
+  text-align: center;
+  margin-bottom: 4px;
+}
