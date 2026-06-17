@@ -1,0 +1,51 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+}
+body {
+  
+  /* Tamanho base de 16px, graças ao truque do rem! */
+  font-size: 1.6rem;
+
+  /* Fonte padrão do sistema operacional do usuário */
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
+    sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+
+  /* Aplicando nossas variáveis do tema escuro */
+  background-color: var(--gray-900);
+  color: var(--text-default);
+}
+.container-fluid {
+  width: 100%;
+}
+
+.container {
+  max-width: 98rem; /* Equivale a 980px */
+  margin: 0 auto; /* Centraliza horizontalmente */
+}
+
+.content {
+  padding: 3.2rem; /* Adiciona espaço interno (32px) */
+}
+
+.form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 2.4rem;
+}
+  .formRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 2.4rem;
+}
+
